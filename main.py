@@ -71,8 +71,11 @@ def chat(request:ChatRequest):
     query_embedding=result.embeddings[0].values
     results=collection.query(
         query_embeddings=[query_embedding],
-        n_results=3
+        n_results=3,
+        include=["documents","metadatas","distances"]
     )
+   
+
     retrieved_documents = results["documents"][0]
     retrieved_metadatas = results["metadatas"][0]
 
@@ -129,7 +132,11 @@ the question, say:
     )
     response = gemini_client.models.generate_content(
         model="gemini-3.6-flash",
-        contents=history_contents
+        contents=history_contents,
+         config={
+        "temperature": 0.2,
+        "max_output_tokens": 500
+    }
     )
 
     # Return answer and sources
